@@ -13,39 +13,39 @@ enum Direction {
     DirectionRight
 };
 
-template <typename T, typename IT>
+template <typename T, typename IT1, typename IT2 = IT1>
 class Iterator2D : public std::iterator<std::forward_iterator_tag, T>
 {    
 public:    
-    Iterator2D(T* p):
-        ptr(p)
+    Iterator2D(const IT1 dim1_begin, const IT1 dim1_end):
+        _dim1_begin(dim1_begin), _dim1_it(dim1_begin), _dim1_end(dim1_end), _dim2_it(_dim1_it->begin())
     {}
     
     T& operator*()
     {
-        return *ptr;
+        return *_dim2_it;
     }
     
     T& operator->()
     {
-        return *ptr;
+        return *_dim2_it;
     }
     
     Iterator2D& operator++()
     {
-        ++ptr;
+        _dim2_it++;
         return *this;
     }
     
     Iterator2D& operator++(int)
     {
-        ptr++;
+        _dim2_it++;
         return *this;
     }
     
     void operator=(T x)
     {
-        *ptr = x;
+        *_dim2_it= x;
     }
     
     bool operator!=(Iterator2D& other)
@@ -55,14 +55,17 @@ public:
     
     
 private:
-    T* ptr;
+    IT1 _dim1_begin;
+    IT1 _dim1_it;
+    IT1 _dim1_end;
+    IT2 _dim2_it;
 };
 
 template <typename T>
 class Table
 {
 public:
-    typedef Iterator2D<vector<T>> it;
+    typedef Iterator2D<T, typename vector<vector<T> >::iterator, typename vector<T>::iterator > it;
     
     void push_back(const vector<T>& row)
     {
@@ -71,12 +74,16 @@ public:
     
     it begin(Direction dir0, Direction dir1)
     {
-        return it(mData.data()->data());
+        // TODO create _begin_it member
+        return it(mData.begin(), mData.end());
     }
     
     it end()
     {
-        return it(mData.data()->data());
+        // TODO create _end_it member
+        it end_it(mData.begin(), mData.end());
+        advance(end_it, mData.size()*mData[0].size());
+        return end_it;
     }
     
 protected:
