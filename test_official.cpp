@@ -4,6 +4,23 @@
 
 using namespace std;
 
+TEST(table_iterator, direction_right_down)
+{
+    Table<int> t_orig;
+    t_orig.push_back({5, 6, 7, 8, 9});
+    t_orig.push_back({10, 11, 12, 13, 14});
+    t_orig.push_back({15, 16, 17, 18, 19});
+    t_orig.push_back({20, 21, 22, 23, 24});
+    
+    vector<int> t_returned;
+    
+    Table<int>::it start = t_orig.begin(DirectionRight, DirectionDown);
+    Table<int>::it end = t_orig.end();
+    copy(start, end, back_inserter(t_returned));
+    vector<int> t_expected = {5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
+    EXPECT_EQ(t_expected, t_returned);
+}
+
 // TEST(table_iterator, sample_read_test)
 // {
 //     Table<int> t;

@@ -33,13 +33,13 @@ public:
     
     Iterator2D& operator++()
     {
-        _dim2_it++;
+        _advance_by_1();
         return *this;
     }
     
     Iterator2D& operator++(int)
     {
-        _dim2_it++;
+        _advance_by_1();
         return *this;
     }
     
@@ -55,6 +55,17 @@ public:
     
     
 private:
+    
+    void _advance_by_1()
+    {
+        _dim2_it++;
+        if (_dim2_it == _dim1_it->end())
+        {
+            _dim1_it++;
+            _dim2_it = _dim1_it->begin();
+        }
+    }
+    
     IT1 _dim1_begin;
     IT1 _dim1_it;
     IT1 _dim1_end;
